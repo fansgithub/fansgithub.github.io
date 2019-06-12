@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>JS基础巩固系列：【6】理解执行上下文和作用域 | 一点一滴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="执行上下文执行上下文可以理解为函数执行的环境，每一个函数执行时，都会给对应的函数创建这样一个执行环境。1234567891011var color = &apos;blue&apos;;function changeColor()&amp;#123;    var anotherColor = &apos;red&apos;;    function swapColors() &amp;#123;        var tempColor = anot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS基础巩固系列：【6】理解执行上下文和作用域">
+<meta property="og:url" content="http://yoursite.com/2019/01/08/理解执行上下文和作用域/index.html">
+<meta property="og:site_name" content="一点一滴">
+<meta property="og:description" content="执行上下文执行上下文可以理解为函数执行的环境，每一个函数执行时，都会给对应的函数创建这样一个执行环境。1234567891011var color = &apos;blue&apos;;function changeColor()&amp;#123;    var anotherColor = &apos;red&apos;;    function swapColors() &amp;#123;        var tempColor = anot">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://fansgithub.github.io/css/images/执行上下文栈.png">
+<meta property="og:updated_time" content="2019-06-12T05:39:35.337Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS基础巩固系列：【6】理解执行上下文和作用域">
+<meta name="twitter:description" content="执行上下文执行上下文可以理解为函数执行的环境，每一个函数执行时，都会给对应的函数创建这样一个执行环境。1234567891011var color = &apos;blue&apos;;function changeColor()&amp;#123;    var anotherColor = &apos;red&apos;;    function swapColors() &amp;#123;        var tempColor = anot">
+<meta name="twitter:image" content="https://fansgithub.github.io/css/images/执行上下文栈.png">
+  
+    <link rel="alternate" href="/atom.xml" title="一点一滴" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">一点一滴</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">以后的你一点会感谢现在努力拼搏的自己</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-理解执行上下文和作用域" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/08/理解执行上下文和作用域/" class="article-date">
+  <time datetime="2019-01-08T07:40:57.000Z" itemprop="datePublished">2019-01-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JS基础巩固系列：【6】理解执行上下文和作用域
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="执行上下文"><a href="#执行上下文" class="headerlink" title="执行上下文"></a>执行上下文</h2><p>执行上下文可以理解为函数执行的环境，每一个函数执行时，都会给对应的函数创建这样一个执行环境。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> color = <span class="string">'blue'</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeColor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> anotherColor = <span class="string">'red'</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">swapColors</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> tempColor = anotherColor;</span><br><span class="line">        anotherColor = color;</span><br><span class="line">        color = tempColor;</span><br><span class="line">    &#125;</span><br><span class="line">    swapColors();</span><br><span class="line">&#125;</span><br><span class="line">changeColor();</span><br></pre></td></tr></table></figure></p>
+<p>以上代码的执行上下文栈的变化过程<br><img src="https://fansgithub.github.io/css/images/执行上下文栈.png" alt="Image text"></p>
+<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><ol>
+<li>怎么查看作用域链<br> 每一个 javaScript 函数都表示为一个对象，更确切地说，是 Function 对象的一个实例。<br>Function 对象同其他对象一样，拥有可编程访问的属性。和一系列不能通过代码访问的 属性，而这些属性是提供给 JavaScript 引擎存取的内部属性。其中一个属性是 [[Scope]] ，由 ECMA-262标准第三版定义。<br>内部属性 [[Scope]] 包含了一个函数被创建的作用域中对象的集合。<br>这个集合被称为函数的 作用域链，它能决定哪些数据能被访问到。<br>来源于：《 高性能JavaScript 》；<br>如果要通过代码查看一个函数的作用域链，我们可以查看其原型constructor属性中的[[Scopes]]属性</li>
+<li><p>作用域链是在什么时候生成的<br>这个问题我们用两段代码比较下:</p>
+<ul>
+<li><p>第一段</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> testValue = <span class="string">'outer'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'函数声明前'</span>, foo.prototype)</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(testValue);	</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'函数执行时'</span>, foo.prototype);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> testValue = <span class="string">'inner'</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(bar.prototype);</span><br><span class="line">    foo();</span><br><span class="line">&#125;</span><br><span class="line">bar();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'函数执行完毕'</span>, foo.prototype)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二段</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> testValue = <span class="string">'outer'</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> testValue = <span class="string">'inner'</span>;</span><br><span class="line">    foo();</span><br><span class="line">    <span class="built_in">console</span>.log(bar.prototype);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(testValue);</span><br><span class="line">        <span class="built_in">console</span>.log(foo.prototype);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">bar();</span><br></pre></td></tr></table></figure>
+<p>根据以上的代码，我们基本可以确认，函数的作用域链，是在js引擎完成初始化上下文执行环境时确认的。</p>
+</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/08/理解执行上下文和作用域/" data-id="cjwst5ndl0005j0uwi2s9omme" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/01/13/原型链的难点/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          JS基础巩固系列：【7】原型链的难点
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/01/08/js创建对象的集中方法/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JS基础巩固系列：【5】js创建对象的几种方法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/01/18/手写一个简单的Promise/">JS基础巩固系列：【8】手写一个简单的Promise</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/13/原型链的难点/">JS基础巩固系列：【7】原型链的难点</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/08/理解执行上下文和作用域/">JS基础巩固系列：【6】理解执行上下文和作用域</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/08/js创建对象的集中方法/">JS基础巩固系列：【5】js创建对象的几种方法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/02/instanceof/">JS基础巩固系列：【4】instanceof的比较原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 一点一滴<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>

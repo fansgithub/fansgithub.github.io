@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>JS基础巩固系列：【8】手写一个简单的Promise | 一点一滴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="规范Promise有一套标准的规范，Promises/A+，初步了解规范后，我们针对一些重要的点，实现一个简单的Promise函数  一个 Promise 的当前状态必须为以下三种状态中的一种：等待态（Pending）、执行态（Fulfilled）和拒绝态（Rejected）。 处于等待态时， promise，可以迁移至执行态或拒绝态   处于执行态时，promise 需满足以下条件： 不能迁移至">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS基础巩固系列：【8】手写一个简单的Promise">
+<meta property="og:url" content="http://yoursite.com/2019/01/18/手写一个简单的Promise/index.html">
+<meta property="og:site_name" content="一点一滴">
+<meta property="og:description" content="规范Promise有一套标准的规范，Promises/A+，初步了解规范后，我们针对一些重要的点，实现一个简单的Promise函数  一个 Promise 的当前状态必须为以下三种状态中的一种：等待态（Pending）、执行态（Fulfilled）和拒绝态（Rejected）。 处于等待态时， promise，可以迁移至执行态或拒绝态   处于执行态时，promise 需满足以下条件： 不能迁移至">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-06-12T05:49:39.944Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS基础巩固系列：【8】手写一个简单的Promise">
+<meta name="twitter:description" content="规范Promise有一套标准的规范，Promises/A+，初步了解规范后，我们针对一些重要的点，实现一个简单的Promise函数  一个 Promise 的当前状态必须为以下三种状态中的一种：等待态（Pending）、执行态（Fulfilled）和拒绝态（Rejected）。 处于等待态时， promise，可以迁移至执行态或拒绝态   处于执行态时，promise 需满足以下条件： 不能迁移至">
+  
+    <link rel="alternate" href="/atom.xml" title="一点一滴" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">一点一滴</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">以后的你一点会感谢现在努力拼搏的自己</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-手写一个简单的Promise" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/18/手写一个简单的Promise/" class="article-date">
+  <time datetime="2019-01-18T07:36:08.000Z" itemprop="datePublished">2019-01-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JS基础巩固系列：【8】手写一个简单的Promise
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="规范"><a href="#规范" class="headerlink" title="规范"></a>规范</h2><p>Promise有一套标准的规范，<a href="http://www.ituring.com.cn/article/66566" target="_blank" rel="noopener">Promises/A+</a>，初步了解规范后，我们针对一些重要的点，实现一个简单的Promise函数</p>
+<ol>
+<li>一个 Promise 的当前状态必须为以下三种状态中的一种：等待态（Pending）、执行态（Fulfilled）和拒绝态（Rejected）。</li>
+<li>处于等待态时，<ul>
+<li>promise，可以迁移至执行态或拒绝态</li>
+</ul>
+</li>
+<li>处于执行态时，promise 需满足以下条件：<ul>
+<li>不能迁移至其他任何状态</li>
+<li>必须拥有一个不可变的终值</li>
+</ul>
+</li>
+<li>处于拒绝态时，promise 需满足以下条件：<ul>
+<li>不能迁移至其他任何状态</li>
+<li>必须拥有一个不可变的据因</li>
+</ul>
+</li>
+<li>一个promise必须提供<font color="red">then</font>方法来访问其当前值、终值和据因。</li>
+<li>then 方法可以被同一个 promise 调用多次</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> PENDING = <span class="string">'pending'</span>;</span><br><span class="line"><span class="keyword">const</span> RESOLVED = <span class="string">'resolved'</span>;</span><br><span class="line"><span class="keyword">const</span> REJECTED = <span class="string">'rejected'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyPromise</span>(<span class="params">func</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> _this = <span class="keyword">this</span>;</span><br><span class="line">    _this.state = PENDING;</span><br><span class="line">    _this.value = <span class="literal">null</span>;</span><br><span class="line">    _this.resolveCallbacks = [];</span><br><span class="line">    _this.rejectCallbacks = [];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(_this.state === PENDING)&#123;</span><br><span class="line">             _this.state = RESOLVED;</span><br><span class="line">             _this.value = value;</span><br><span class="line">             _this.resolveCallbacks.map(<span class="function"><span class="params">cb</span> =&gt;</span> cb(_this.value))</span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">reject</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(_this.state === PENDING)&#123;</span><br><span class="line">            _this.state = REJECTED;</span><br><span class="line">            _this.value = value;</span><br><span class="line">            _this.rejectCallbacks.map(<span class="function"><span class="params">cb</span> =&gt;</span> cb(_this.value))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        func(resolve, reject)</span><br><span class="line">    &#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">        reject(err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">MyPromise.prototype.then = <span class="function"><span class="keyword">function</span>(<span class="params">onResolve, onReject</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'then 方法执行'</span>)</span><br><span class="line">    <span class="keyword">const</span> _this = <span class="keyword">this</span>;</span><br><span class="line">    onResolve = <span class="keyword">typeof</span> onResolve === <span class="string">'function'</span>? onResolve: <span class="function"><span class="params">v</span>=&gt;</span>v;</span><br><span class="line">    onReject = <span class="keyword">typeof</span> onReject === <span class="string">'function'</span>? onReject: <span class="function"><span class="params">v</span>=&gt;</span>&#123;<span class="keyword">throw</span> v&#125;;</span><br><span class="line">    <span class="keyword">if</span>(_this.state === PENDING)&#123;</span><br><span class="line">        _this.resolveCallbacks.push(onResolve)</span><br><span class="line">        _this.rejectCallbacks.push(onReject)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(_this.state === RESOLVED)&#123;</span><br><span class="line">        onResolve(_this.value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(_this.state === REJECTED)&#123;</span><br><span class="line">        onReject(_this.value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> test = <span class="keyword">new</span> MyPromise(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>)</span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;resolve(<span class="string">'success'</span>)&#125;, <span class="number">2000</span>)</span><br><span class="line">&#125;)</span><br><span class="line">test.then(<span class="function"><span class="keyword">function</span>(<span class="params">result</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'第一次调用promise'</span>, result)</span><br><span class="line">&#125;)</span><br><span class="line">test.then(<span class="function"><span class="keyword">function</span>(<span class="params">result</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'第二次调用promise'</span>, result)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/18/手写一个简单的Promise/" data-id="cjwst5ndj0004j0uwxyc7facn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/01/13/原型链的难点/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JS基础巩固系列：【7】原型链的难点</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/01/18/手写一个简单的Promise/">JS基础巩固系列：【8】手写一个简单的Promise</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/13/原型链的难点/">JS基础巩固系列：【7】原型链的难点</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/08/理解执行上下文和作用域/">JS基础巩固系列：【6】理解执行上下文和作用域</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/08/js创建对象的集中方法/">JS基础巩固系列：【5】js创建对象的几种方法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/02/instanceof/">JS基础巩固系列：【4】instanceof的比较原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 一点一滴<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>

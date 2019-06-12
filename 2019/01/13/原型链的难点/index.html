@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>JS基础巩固系列：【7】原型链的难点 | 一点一滴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="prototype显示原型属性，只有函数才拥有该属性。 __proto__隐式原型，每个对象都有，指向了创建该对象的构造函数的原型。对于实例对象来说，这个属性是在new的过程中被添加到实例上的，无论是 function Foo() 还是 let a = { b : 1 }，内部的实现是使用了 new Function() 和 new Object() Function.__proto__ ==">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS基础巩固系列：【7】原型链的难点">
+<meta property="og:url" content="http://yoursite.com/2019/01/13/原型链的难点/index.html">
+<meta property="og:site_name" content="一点一滴">
+<meta property="og:description" content="prototype显示原型属性，只有函数才拥有该属性。 __proto__隐式原型，每个对象都有，指向了创建该对象的构造函数的原型。对于实例对象来说，这个属性是在new的过程中被添加到实例上的，无论是 function Foo() 还是 let a = { b : 1 }，内部的实现是使用了 new Function() 和 new Object() Function.__proto__ ==">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://fansgithub.github.io/css/images/prototype.png">
+<meta property="og:updated_time" content="2019-06-12T05:39:35.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS基础巩固系列：【7】原型链的难点">
+<meta name="twitter:description" content="prototype显示原型属性，只有函数才拥有该属性。 __proto__隐式原型，每个对象都有，指向了创建该对象的构造函数的原型。对于实例对象来说，这个属性是在new的过程中被添加到实例上的，无论是 function Foo() 还是 let a = { b : 1 }，内部的实现是使用了 new Function() 和 new Object() Function.__proto__ ==">
+<meta name="twitter:image" content="https://fansgithub.github.io/css/images/prototype.png">
+  
+    <link rel="alternate" href="/atom.xml" title="一点一滴" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">一点一滴</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">以后的你一点会感谢现在努力拼搏的自己</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-原型链的难点" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/13/原型链的难点/" class="article-date">
+  <time datetime="2019-01-13T09:26:44.000Z" itemprop="datePublished">2019-01-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JS基础巩固系列：【7】原型链的难点
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://fansgithub.github.io/css/images/prototype.png" alt="Image text"></p>
+<ol>
+<li>prototype<br>显示原型属性，只有函数才拥有该属性。</li>
+<li>__proto__<br>隐式原型，每个对象都有，指向了创建该对象的构造函数的原型。<br>对于实例对象来说，这个属性是在new的过程中被添加到实例上的，无论是 function Foo() 还是 let a = { b : 1 }，内部的实现是使用了 new Function() 和 new Object()</li>
+<li>Function.__proto__ === Function.prototype<br>对于对象来说，xx.__proto__.contrcutor 是该对象的构造函数，但是在图中我们可以发现 Function.__proto__ === Function.prototype，难道这代表着 Function 自己产生了自己?<br>Function.prototype 这个特殊的对象，如果你在浏览器将这个对象打印出来，会发现这个对象其实是一个函数。<br>我们知道函数都是通过 new Function() 生成的，难道 Function.prototype 也是通过 new Function() 产生的吗？答案也是否定的，这个函数也是引擎自己创建的。首先引擎创建了 Object.prototype ，然后创建了 Function.prototype ，并且通过 __proto__ 将两者联系了起来。这里也很好的解释了上面的一个问题，为什么 let fun = Function.prototype.bind() 没有 prototype 属性。因为 Function.prototype 是引擎创建出来的对象，引擎认为不需要给这个对象添加 prototype 属性。<br>所以我们又可以得出一个结论，不是所有函数都是 new Function() 产生的。<br>有了 Function.prototype 以后才有了 function Function() ，然后其他的构造函数都是 function Function() 生成的。<br>现在可以来解释 Function.__proto__ === Function.prototype 这个问题了。因为先有的 Function.prototype 以后才有的 function Function() ，所以也就不存在鸡生蛋蛋生鸡的悖论问题了。对于为什么 Function.__proto__ 会等于 Function.prototype ，个人的理解是：其他所有的构造函数都可以通过原型链找到 Function.prototype ，并且 function Function() 本质也是一个函数，为了不产生混乱就将 function Function() 的 __proto__ 联系到了 Function.prototype 上。</li>
+</ol>
+<ul>
+<li>Object 是所有对象的爸爸，所有对象都可以通过 __proto__ 找到它</li>
+<li>Function 是所有函数的爸爸，所有函数都可以通过 __proto__ 找到它</li>
+<li>Function.prototype 和 Object.prototype 是两个特殊的对象，他们由引擎来创建</li>
+<li>除了以上两个特殊对象，其他对象都是通过构造器 new 出来的</li>
+<li>函数的 prototype 是一个对象，也就是原型</li>
+<li>对象的 __proto__ 指向原型， __proto__ 将对象和原型连接起来组成了原型链</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/13/原型链的难点/" data-id="cjwst5ndt0009j0uwqr832erw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/01/18/手写一个简单的Promise/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          JS基础巩固系列：【8】手写一个简单的Promise
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/01/08/理解执行上下文和作用域/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JS基础巩固系列：【6】理解执行上下文和作用域</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/01/18/手写一个简单的Promise/">JS基础巩固系列：【8】手写一个简单的Promise</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/13/原型链的难点/">JS基础巩固系列：【7】原型链的难点</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/08/理解执行上下文和作用域/">JS基础巩固系列：【6】理解执行上下文和作用域</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/08/js创建对象的集中方法/">JS基础巩固系列：【5】js创建对象的几种方法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/02/instanceof/">JS基础巩固系列：【4】instanceof的比较原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 一点一滴<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>
