@@ -66,6 +66,120 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-http缓存图解" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/24/http缓存图解/" class="article-date">
+  <time datetime="2019-06-24T09:51:55.000Z" itemprop="datePublished">2019-06-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/24/http缓存图解/">http缓存图解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://fansgithub.github.io/css/images/http-cache.png" alt="Image text"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/06/24/http缓存图解/" data-id="cjxa7eouv0000qguwmhue86ig" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-重学webpack" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/12/重学webpack/" class="article-date">
+  <time datetime="2019-06-12T07:14:16.000Z" itemprop="datePublished">2019-06-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/12/重学webpack/">重学webpack</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="webpack安装"><a href="#webpack安装" class="headerlink" title="webpack安装"></a>webpack安装</h2><ul>
+<li>安装webpack</li>
+<li>安装webpack-cli</li>
+</ul>
+<h2 id="webpack可以进行0配置"><a href="#webpack可以进行0配置" class="headerlink" title="webpack可以进行0配置"></a>webpack可以进行0配置</h2><ul>
+<li>新建src文件下，创建index.js文件</li>
+<li>执行npx webpack</li>
+<li>指定配置文件  webpack –config  webpack.config.js</li>
+</ul>
+<h2 id="基础配置"><a href="#基础配置" class="headerlink" title="基础配置"></a>基础配置</h2><ul>
+<li><p>entry</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 单页应用</span><br><span class="line">    entry: <span class="string">'./src/index.js'</span> </span><br><span class="line"><span class="number">2.</span> 多页应用</span><br><span class="line">    entry: &#123;</span><br><span class="line">        index: <span class="string">'./src/index.js'</span>,</span><br><span class="line">        main: <span class="string">'./src/main.js'</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>output</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line">    filename: <span class="string">'[name].[hash:8].js'</span>,</span><br><span class="line">    path: path.resolve(__dirname, <span class="string">'build'</span>),</span><br><span class="line">    publicPath: <span class="string">'http://www.baidu.com'</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mode</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mode: <span class="string">'development'</span>, <span class="comment">// development or production</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>module</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">    <span class="comment">/* 不去解析jquery和loadsh文件的依赖 */</span></span><br><span class="line">    noParse: <span class="regexp">/jquery|lodash/</span>, </span><br><span class="line">    rules: [&#123;</span><br><span class="line">        test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">        use: &#123;</span><br><span class="line">            loader: <span class="string">'babel-loader'</span>,</span><br><span class="line">            options: &#123;</span><br><span class="line">                    presets: [</span><br><span class="line">                    <span class="string">'@babel/preset-env'</span>,</span><br><span class="line">                    <span class="string">'@babel/preset-react'</span></span><br><span class="line">                ],</span><br><span class="line">                plugins: [</span><br><span class="line">                    <span class="comment">/* 支持class 以及 修饰器 */</span></span><br><span class="line">                    [<span class="string">"@babel/plugin-proposal-decorators"</span>, &#123; <span class="string">"legacy"</span>: <span class="literal">true</span> &#125;],</span><br><span class="line">                    [<span class="string">"@babel/plugin-proposal-class-properties"</span>, &#123; <span class="string">"loose"</span> : <span class="literal">true</span> &#125;],</span><br><span class="line">                    <span class="string">"@babel/plugin-transform-runtime"</span></span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>resolve</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">resolve: &#123; </span><br><span class="line">    <span class="comment">/* 第三方包寻找地址 */</span></span><br><span class="line">    modules: [path.resolve(<span class="string">'node_modules'</span>)],</span><br><span class="line">    <span class="comment">/* 别名 */</span></span><br><span class="line">    alias: &#123;</span><br><span class="line">        bootstrap: <span class="string">'bootstrap/dist/css/bootstrap.css'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">/* 第三方包引入的时候优先查找package.json下的哪个文件 */</span></span><br><span class="line">    mainFields: [<span class="string">'style'</span>, <span class="string">'main'</span>],</span><br><span class="line">    <span class="comment">/* 入口文件的名字 */</span></span><br><span class="line">    mainFiles: [],</span><br><span class="line">    <span class="comment">/* 扩展名，依次查找 */</span></span><br><span class="line">    extensions: [<span class="string">'.js'</span>, <span class="string">'.css'</span>, <span class="string">'.json'</span>],</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>plugins</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">一些常用的插件</span><br><span class="line"><span class="number">1.</span> html-webpack-plugin</span><br><span class="line"><span class="number">2.</span> mini-css-extract-plugin</span><br><span class="line"><span class="number">3.</span> clean-webpack-plugin</span><br><span class="line"><span class="number">4.</span> copy-webpack-plugin</span><br><span class="line"><span class="number">5.</span> webpack.DefinePlugin</span><br><span class="line"><span class="number">6.</span> webpack.BannerPlugin</span><br><span class="line"><span class="number">7.</span> webpack.IgnorePlugin</span><br><span class="line"></span><br><span class="line">plugins: [</span><br><span class="line">    <span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">        DEV: <span class="built_in">JSON</span>.stringify(<span class="string">'dev'</span>)</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">        template: <span class="string">'./src/index.html'</span>,</span><br><span class="line">        filename: <span class="string">'index.html'</span>,</span><br><span class="line">        hash: <span class="literal">true</span>,</span><br><span class="line">        minify: &#123;</span><br><span class="line">            removeAttributeQuotes: <span class="literal">true</span>,</span><br><span class="line">            collapseWhitespace: <span class="literal">true</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        chunks: [<span class="string">'index'</span>]</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">        template: <span class="string">'./src/index.html'</span>,</span><br><span class="line">        filename: <span class="string">'main.html'</span>,</span><br><span class="line">        hash: <span class="literal">true</span>,</span><br><span class="line">        minify: &#123;</span><br><span class="line">            removeAttributeQuotes: <span class="literal">true</span>,</span><br><span class="line">            collapseWhitespace: <span class="literal">true</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        chunks: [<span class="string">'main'</span>]</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> MiniCssExtractPlugin(&#123;</span><br><span class="line">        filename: <span class="string">'css/main.css'</span></span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="comment">// new webpack.ProvidePlugin(&#123; //在每个模块中注入$</span></span><br><span class="line">    <span class="comment">//     $: 'jquery'</span></span><br><span class="line">    <span class="comment">// &#125;),</span></span><br><span class="line">    <span class="keyword">new</span> CleanWebpackPlugin(),</span><br><span class="line">    <span class="keyword">new</span> CopyWebpackPlugin([&#123;</span><br><span class="line">        <span class="keyword">from</span>: <span class="string">'doc'</span>,</span><br><span class="line">        to: <span class="string">'./doc'</span></span><br><span class="line">    &#125;]),</span><br><span class="line">    <span class="keyword">new</span> webpack.BannerPlugin(<span class="string">'make 2019 by fanxing'</span>),</span><br><span class="line">    <span class="keyword">new</span> webpack.IgnorePlugin(<span class="regexp">/\.\/local/</span>, /moment/)</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>devServer</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> devServer: &#123;</span><br><span class="line">    port: <span class="number">3000</span>,</span><br><span class="line">    progress: <span class="literal">true</span>,</span><br><span class="line">    contentBase: <span class="string">'./build'</span>,</span><br><span class="line">    compress: <span class="literal">true</span>,</span><br><span class="line">    <span class="comment">// proxy: &#123;</span></span><br><span class="line">    <span class="comment">//     '/api': &#123;</span></span><br><span class="line">    <span class="comment">//         target: 'http://localhost:3001',</span></span><br><span class="line">    <span class="comment">//         pathRewrite: &#123;'/api': ''&#125;</span></span><br><span class="line">    <span class="comment">//     &#125;</span></span><br><span class="line">    <span class="comment">// &#125;,</span></span><br><span class="line">    <span class="comment">// before(app)&#123;</span></span><br><span class="line">    <span class="comment">//     app.get('/api/user', (req, res)=&gt;&#123;</span></span><br><span class="line">    <span class="comment">//         res.json(&#123;name: 'fanxing'&#125;)</span></span><br><span class="line">    <span class="comment">//     &#125;)</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>watch &amp;&amp; watchOption</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">watch: <span class="literal">false</span>,</span><br><span class="line">watchOptions: &#123;</span><br><span class="line">    <span class="comment">/* 询问频率 一秒询问1000次 */</span></span><br><span class="line">    poll: <span class="number">1000</span>,</span><br><span class="line">    <span class="comment">/* 防抖 */</span></span><br><span class="line">    aggregateTimeout: <span class="number">500</span>,</span><br><span class="line">    <span class="comment">/* 忽略监听 */</span></span><br><span class="line">    ignored: <span class="regexp">/node_modules/</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>externals  </p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">externals: &#123;</span><br><span class="line">    <span class="comment">//使用CDN后 依然像写 import $ from 'jquery' 写法</span></span><br><span class="line">    jquery: <span class="string">"$"</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>optimization</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> optimization: &#123;</span><br><span class="line">    <span class="comment">//使用 optimize-css-assets-webpack-plugin 压缩css后，js也必须使用 uglifyjs-webpack-plugin 来压缩</span></span><br><span class="line">    minimizer: [</span><br><span class="line">        <span class="comment">//new uglifyjs(),</span></span><br><span class="line">        <span class="keyword">new</span> TerserJSPlugin(&#123;&#125;),</span><br><span class="line">        <span class="comment">//new OptimizeCSSAssetsPlugin(&#123;&#125;)</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/06/12/重学webpack/" data-id="cjxa7eovc000aqguwaj0tdg8r" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-手写一个简单的Promise" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/01/18/手写一个简单的Promise/" class="article-date">
@@ -113,7 +227,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/18/手写一个简单的Promise/" data-id="cjwsvt3ss0006xouwn9dl13w1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/18/手写一个简单的Promise/" data-id="cjxa7eovb0009qguwx7lrfdks" class="article-share-link">Share</a>
       
       
     </footer>
@@ -163,7 +277,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/13/原型链的难点/" data-id="cjwsvt3sq0004xouws80451k1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/13/原型链的难点/" data-id="cjxa7eov30005qguwjrcevkxr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -215,7 +329,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/08/理解执行上下文和作用域/" data-id="cjwsvt3su0008xouwqhjqmlm7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/08/理解执行上下文和作用域/" data-id="cjxa7eova0008qguwusqg47yg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -263,7 +377,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/08/js创建对象的集中方法/" data-id="cjwsvt3sj0001xouwnjngyo6y" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/08/js创建对象的集中方法/" data-id="cjxa7eouy0001qguwhr3p5k95" class="article-share-link">Share</a>
       
       
     </footer>
@@ -313,7 +427,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/instanceof/" data-id="cjwsvt3sg0000xouwqzn7mtum" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/instanceof/" data-id="cjxa7eov10003qguwnfjjzn5n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -368,7 +482,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/js垃圾回收机制/" data-id="cjwsvt3sl0003xouw7n12thlh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/js垃圾回收机制/" data-id="cjxa7eov00002qguw4uwanf82" class="article-share-link">Share</a>
       
       
     </footer>
@@ -411,7 +525,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/闭包/" data-id="cjwsvt3sz0009xouwz84tr1w5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/闭包/" data-id="cjxa7eovt000bqguwsrgtustb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -479,109 +593,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/29/this指向/" data-id="cjwsvt3sr0005xouwhcklsiek" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-nginx常用功能" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/14/nginx常用功能/" class="article-date">
-  <time datetime="2018-11-14T01:05:52.000Z" itemprop="datePublished">2018-11-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/14/nginx常用功能/">nginx常用功能</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Nginx 是俄罗斯人编写的十分轻量级的 HTTP 服务器,Nginx，它的发音为“engine X”，是一个高性能的HTTP和反向代理服务器，同时也是一个 IMAP/POP3/SMTP 代理服务器。其特点是占有内存少，并发能力强，事实上nginx的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用nginx网站用户有：百度、京东、新浪、网易、腾讯、淘宝等。</p>
-<h2 id="主要功能以及用途"><a href="#主要功能以及用途" class="headerlink" title="主要功能以及用途"></a>主要功能以及用途</h2><ol>
-<li>正向代理（内网服务器主动去请求外网服务的一种行为）<br>客户端无法主动或者不打算主动去向某服务器发送请求，而是委托nginx代理服务器去向服务器发送请求，并且获得处理结果，返回给客户端。VPN的原理大体上类似于一个正向代理，需要访问外网的电脑，发起一个访问外网的请求，通过本机上的VPN去寻找一个可以访问国外网站的代理服务器，代理服务器向外国网站发送请求，然后把结果返回给本机。</li>
-<li><p>反向代理<br>反向代理是指用代理服务器来接受客户端发来的请求，然后将请求转发给内网中的上游服务器，上游服务器处理完之后，把结果通过nginx返回给客户端。</p>
-</li>
-<li><p>透明代理<br>透明代理：也叫做简单代理，意思客户端向服务端发起请求时，请求会先到达透明代理服务器，代理服务器再把请求转交给真实的源服务器处理，也就是是客户端根本不知道有代理服务器的存在。</p>
-</li>
-</ol>
-<ol start="4">
-<li>负载均衡<br>将服务器接收到的请求按照规则分发的过程，称为负载均衡。负载均衡是反向代理的一种体现。<br>负载均衡的模式:<ol>
-<li>轮询：每个请求按时间顺序逐一分配到不同的后端服务器，也是nginx的默认模式。轮询模式的配置很简单，只需要把服务器列表加入到upstream模块中即可。</li>
-<li>ip_hash：每个请求按访问IP的hash结果分配，同一个IP客户端固定访问一个后端服务器。可以保证来自同一ip的请求被打到固定的机器上，可以解决session问题。</li>
-<li>url_hash：按访问url的hash结果来分配请求，相同的url固定转发到同一个后端服务器处理。</li>
-<li>fair：按后端服务器的响应时间来分配请求，响应时间短的优先分配。<br>每一种模式中，每一台服务器后面可以携带的参数有：</li>
-</ol>
-<ul>
-<li>down: 当前服务器暂不参与负载</li>
-<li>weight: 权重，值越大，服务器的负载量越大。</li>
-<li>max_fails：允许请求失败的次数，默认为1。</li>
-<li>fail_timeout:max_fails次失败后暂停的时间。</li>
-<li>backup：备份机， 只有其它所有的非backup机器down或者忙时才会请求backup机器。</li>
-</ul>
-</li>
-<li>静态服务器</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/14/nginx常用功能/" data-id="cjwsvt3sk0002xouw8akfsfow" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-性能优化" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/05/性能优化/" class="article-date">
-  <time datetime="2018-11-05T08:10:30.000Z" itemprop="datePublished">2018-11-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/05/性能优化/">使用requestAnimationFrame做性能优化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>window.requestAnimationFrame() 方法告诉浏览器您希望执行动画并请求浏览器在下一次重绘之前调用指定的函数来更新动画。该方法使用一个回调函数作为参数，这个回调函数会在浏览器重绘之前调用。</p>
-<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p><code>window.requestAnimationFrame(callback);</code></p>
-<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p><code>callback</code><br>一个指定函数的参数，该函数在下次重新绘制动画时调用。这个回调函数只有一个传参，DOMHighResTimeStamp，指示requestAnimationFrame() 开始触发回调函数的当前时间（performance.now() 返回的时间）。</p>
-<h2 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h2><p>一个 long 整数，请求 ID ，是回调列表中唯一的标识。是个非零值，没别的意义。你可以传这个值给 window.cancelAnimationFrame() 以取消回调函数。</p>
-<p>以下示例为页面渲染100000条数据时的优化方案<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"ie=edge"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span>&gt;</span>控件<span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 插入十万条数据</span></span></span><br><span class="line"><span class="javascript">      <span class="keyword">const</span> total = <span class="number">100000</span>;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 一次插入 20 条，如果觉得性能不好就减少</span></span></span><br><span class="line"><span class="javascript">      <span class="keyword">const</span> once = <span class="number">20</span>;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 渲染数据总共需要几次</span></span></span><br><span class="line"><span class="javascript">      <span class="keyword">const</span> loopCount = total / once;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">let</span> countOfRender = <span class="number">0</span>;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">let</span> ul = <span class="built_in">document</span>.querySelector(<span class="string">"ul"</span>);</span></span><br><span class="line"><span class="javascript">      <span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 优化性能，插入不会造成回流</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> fragment = <span class="built_in">document</span>.createDocumentFragment();</span></span><br><span class="line"><span class="javascript">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; once; i++) &#123;</span></span><br><span class="line"><span class="javascript">          <span class="keyword">const</span> li = <span class="built_in">document</span>.createElement(<span class="string">"li"</span>);</span></span><br><span class="line"><span class="javascript">          li.innerText = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * total);</span></span><br><span class="line"><span class="undefined">          fragment.appendChild(li);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">        ul.appendChild(fragment);</span></span><br><span class="line"><span class="undefined">        countOfRender += 1;</span></span><br><span class="line"><span class="undefined">        loop();</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="javascript">      <span class="function"><span class="keyword">function</span> <span class="title">loop</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span> (countOfRender &lt; loopCount) &#123;</span></span><br><span class="line"><span class="javascript">          <span class="built_in">window</span>.requestAnimationFrame(add);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="undefined">      loop();</span></span><br><span class="line"><span class="undefined">    &#125;, 0);</span></span><br><span class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/性能优化/" data-id="cjwsvt3st0007xouwq86ajnlh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/29/this指向/" data-id="cjxa7eov40006qguwct4ng1ik" class="article-share-link">Share</a>
       
       
     </footer>
@@ -592,6 +604,11 @@
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -609,7 +626,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -622,6 +639,14 @@
       <ul>
         
           <li>
+            <a href="/2019/06/24/http缓存图解/">http缓存图解</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/12/重学webpack/">重学webpack</a>
+          </li>
+        
+          <li>
             <a href="/2019/01/18/手写一个简单的Promise/">JS基础巩固系列：【8】手写一个简单的Promise</a>
           </li>
         
@@ -631,14 +656,6 @@
         
           <li>
             <a href="/2019/01/08/理解执行上下文和作用域/">JS基础巩固系列：【6】理解执行上下文和作用域</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/08/js创建对象的集中方法/">JS基础巩固系列：【5】js创建对象的几种方法</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/02/instanceof/">JS基础巩固系列：【4】instanceof的比较原理</a>
           </li>
         
       </ul>
