@@ -66,6 +66,139 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-js判断数据类型的方法" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/25/js判断数据类型的方法/" class="article-date">
+  <time datetime="2019-09-25T01:46:38.000Z" itemprop="datePublished">2019-09-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/25/js判断数据类型的方法/">js判断数据类型的方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h2><p>返回的结果用该类型的字符串(全小写字母)形式表示<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span> <span class="string">''</span>; <span class="comment">// string 有效</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="number">1</span>; <span class="comment">// number 有效</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="built_in">Symbol</span>(); <span class="comment">// symbol 有效</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">true</span>; <span class="comment">//boolean 有效</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">undefined</span>; <span class="comment">//undefined 有效</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">null</span>; <span class="comment">//object 无效</span></span><br><span class="line"><span class="keyword">typeof</span> [] ; <span class="comment">//object 无效</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">new</span> <span class="built_in">Function</span>(); <span class="comment">// function 有效</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">new</span> <span class="built_in">Date</span>(); <span class="comment">//object 无效</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">new</span> <span class="built_in">RegExp</span>(); <span class="comment">//object 无效</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>对于基本类型，除null以外，均可以返回正确的结果</li>
+<li>对于引用类型，除function以外，一律返回object</li>
+<li>对于null，返回object</li>
+<li><p>对于function，返回function类型</p>
+<h2 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h2><p>A instance B 用来判断A是否为B的实例，instanceof 检测的是原型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> O = R.prototype;<span class="comment">// 取 R 的显示原型</span></span><br><span class="line">L = L.__proto__;<span class="comment">// 取 L 的隐式原型</span></span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>) &#123; </span><br><span class="line">    <span class="keyword">if</span> (L === <span class="literal">null</span>) </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">    <span class="keyword">if</span> (O === L)<span class="comment">// 这里重点：当 O 严格等于 L 时，返回 true </span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">    L = L.__proto__; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></span><br><span class="line">&#123;&#125; <span class="keyword">instanceof</span> <span class="built_in">Object</span>;<span class="comment">// true</span></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Date</span>() <span class="keyword">instanceof</span> <span class="built_in">Date</span>;<span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"><span class="keyword">new</span> Person() <span class="keyword">instanceof</span> Person;</span><br><span class="line"></span><br><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Object</span>; <span class="comment">// true</span></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Date</span>() <span class="keyword">instanceof</span> <span class="built_in">Object</span>;<span class="comment">// true</span></span><br><span class="line"><span class="keyword">new</span> Person <span class="keyword">instanceof</span> <span class="built_in">Object</span>;<span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>instanceof 只能用来判断两个对象是否属于实例关系， 而不能判断一个对象实例具体属于哪种类型。</p>
+</li>
+<li><p>当一个页面不止一个全局执行环境时（存在多个iframe），不同环境之前的数据类型使用instanceof判断有问题</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> iframe = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>);</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(iframe);</span><br><span class="line">xArray = <span class="built_in">window</span>.frames[<span class="number">0</span>].Array;</span><br><span class="line"><span class="keyword">var</span> arr = <span class="keyword">new</span> xArray(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>); <span class="comment">// [1,2,3]</span></span><br><span class="line">arr <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>  针对数组的这个问题，可以根据Array.isArray()判断</p>
+<h2 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">new</span> F()</span><br><span class="line">F.prototype.constructor === f.constructor</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>原则上实例的constuctor属性就代表了数据类型，但是如果重写prototypez之后，就会有问题</p>
+<h2 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="toString"></a>toString</h2><p>toString是Object原型的方法，调用该方法会返回当前对象的[[Class]]，这是一个内部属性，格式为[object Xxx]，Xxx就是数据的类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="string">''</span>) ;   <span class="comment">// [object String]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="number">1</span>) ;    <span class="comment">// [object Number]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">true</span>) ; <span class="comment">// [object Boolean]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">Symbol</span>()); <span class="comment">//[object Symbol]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">undefined</span>) ; <span class="comment">// [object Undefined]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">null</span>) ; <span class="comment">// [object Null]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="keyword">new</span> <span class="built_in">Function</span>()) ; <span class="comment">// [object Function]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="keyword">new</span> <span class="built_in">Date</span>()) ; <span class="comment">// [object Date]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call([]) ; <span class="comment">// [object Array]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="keyword">new</span> <span class="built_in">RegExp</span>()) ; <span class="comment">// [object RegExp]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="keyword">new</span> <span class="built_in">Error</span>()) ; <span class="comment">// [object Error]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">document</span>) ; <span class="comment">// [object HTMLDocument]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">window</span>) ; <span class="comment">//[object Window] window 是全局对象 global 的引用</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/09/25/js判断数据类型的方法/" data-id="ck0yn1xdw00021guw1dx8tusz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js创建对象方式" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/07/31/js创建对象方式/" class="article-date">
+  <time datetime="2019-07-31T05:50:47.000Z" itemprop="datePublished">2019-07-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/31/js创建对象方式/">js创建对象方式与集成方式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h2><ol>
+<li><p>工厂模式<br> 没有解决对象识别</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">name, age, job</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">    o.name = name;</span><br><span class="line">    o.age = age;</span><br><span class="line">    o.job = job;</span><br><span class="line">    o.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> o</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person1 = createPerson(<span class="string">'tom'</span>, <span class="number">29</span>, <span class="string">'web开发'</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>构造函数模式<br> 方法重复定义</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CreatePerson</span>(<span class="params">name, age, job</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">    <span class="keyword">this</span>.job = job;</span><br><span class="line">    <span class="keyword">this</span>.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> CreatePerson(<span class="string">'tom'</span>, <span class="number">29</span>, <span class="string">'web开发'</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>原型模式<br> 所有的实例有了相同的属性和方法   </p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Person.prototype.name = <span class="string">'tom'</span>;</span><br><span class="line">Person.prototype.age = <span class="number">29</span>;</span><br><span class="line">Person.prototype.job = <span class="string">'web开发'</span>;</span><br><span class="line">Person.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>原型模式 + 构造函数模式<br> 所有的实例有了相同的属性和方法 </p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">    <span class="keyword">this</span>.job = job;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">Person.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>寄生构造函数模式</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SpecialArray</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> values = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line">    values.push.apply(values, <span class="built_in">arguments</span>);</span><br><span class="line">    values.toPipedString = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.join(<span class="string">"|"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> values</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> colors = <span class="keyword">new</span> SpecialArray(<span class="string">'red'</span>, <span class="string">'blue'</span>, <span class="string">'green'</span>);</span><br><span class="line">alert(colors.toPipedString())</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>稳妥构造函数模式</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">    o.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(name)</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> o</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> friend = Person(<span class="string">'tom'</span>, <span class="number">29</span>, <span class="string">'web开发'</span>);</span><br><span class="line">friend.sayName();</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><ol>
+<li><p>原型链<br> 子类构造函数原型指向父类的实例，缺陷在于创建子类的时候，不能像父类的构造函数传递参数，而且原型中包含引用类型的值，修改后会影响所有的实例</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.property = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line">SuperType.prototype.getSuperValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.property;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.subpreoperty = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br><span class="line">SubType.prototype.getSubValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.subproperty; </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType();</span><br><span class="line">alert(instance.getSuperValue())</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>借用构造函数继承<br> 在子类的构造函数中，使用call方法调用父类函数，生成实例，缺陷：只能继承到父类构造函数中的属性方法，原型上无法获取，并且，方法不能服用</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.colors = [<span class="string">'red'</span>, <span class="string">'blue'</span>, <span class="string">'greem'</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    SuperType.call(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> SubType();</span><br><span class="line">instance1.colors.push(<span class="string">'black'</span>);</span><br><span class="line">alert(instance1.colors);</span><br><span class="line"><span class="keyword">var</span> instance2 = <span class="keyword">new</span> SubType();</span><br><span class="line">alert(instance2.colors)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>组合继承<br> 使用call继承父类的属性（可以传参，自定义）和方法，再修改子类原型指向父类实例继承父类原型的方法，缺陷：父类的构造函数执行了两次</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name</span><br><span class="line">    <span class="keyword">this</span>.colors = [<span class="string">'red'</span>, <span class="string">'blue'</span>, <span class="string">'greem'</span>]</span><br><span class="line">&#125;</span><br><span class="line">SuperType.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name, age</span>)</span>&#123;</span><br><span class="line">    SuperType.call(<span class="keyword">this</span>, name);</span><br><span class="line">    <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br><span class="line">SubType.prototype.sayAge = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>原型式继承</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span>(<span class="params">o</span>)</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    F.prototype = o;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    name: <span class="string">'tom'</span>,</span><br><span class="line">    friends: [<span class="string">'shelby'</span>, <span class="string">'jerry'</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> anotherPerson = object(person);</span><br><span class="line">anotherPerson.name = <span class="string">'Linda'</span>;</span><br><span class="line">anotherPerson.friends.push(<span class="string">'bob'</span>);</span><br><span class="line"><span class="keyword">var</span> anotherPerson2 = object(person);</span><br><span class="line">anotherPerson2.name = <span class="string">'Grey'</span>;</span><br><span class="line">anotherPerson2.friends.push(<span class="string">'barbie'</span>)</span><br><span class="line">alert(person.friends)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>寄生式继承</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span>(<span class="params">o</span>)</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    F.prototype = o;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createAnother</span>(<span class="params">original</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> clone = object(original);</span><br><span class="line">    clone.sayHi = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="string">'hi'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> clone</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    name: <span class="string">'tom'</span>,</span><br><span class="line">    age: <span class="number">29</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> anotherPerson = createAnother(person);</span><br><span class="line">anotherPerson.sayHi();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>寄生组合式继承<br> 通过构造函数继承属性，原型链方式继承方法</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span>(<span class="params">o</span>)</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    F.prototype = o;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType, superType</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> prototype = object(superType.prototype);</span><br><span class="line">    prorotype.constructor = subType;</span><br><span class="line">    subType.prototype = prototype</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Super</span>(<span class="params"></span>) </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p> 借助Object.create方法实现如下</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Super.prototype.getNumber = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Sub</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> s = <span class="keyword">new</span> Sub();</span><br><span class="line">Sub.prototype = <span class="built_in">Object</span>.create(Super.prototype, &#123;</span><br><span class="line">    <span class="keyword">constructor</span>: &#123;</span><br><span class="line">        value: Sub,</span><br><span class="line">        enumerable: <span class="literal">false</span>,</span><br><span class="line">        writable: <span class="literal">true</span>,</span><br><span class="line">        configurable: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/07/31/js创建对象方式/" data-id="ck0yn1xdv00011guwz7514yg3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-http缓存图解" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/06/24/http缓存图解/" class="article-date">
@@ -93,7 +226,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/24/http缓存图解/" data-id="cjxa7eouv0000qguwmhue86ig" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/06/24/http缓存图解/" data-id="ck0yn1xdz00041guwnw6vxqo8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -170,7 +303,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/12/重学webpack/" data-id="cjxa7eovc000aqguwaj0tdg8r" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/06/12/重学webpack/" data-id="ck0yn1xe9000b1guw6xfg2rgq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -227,7 +360,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/18/手写一个简单的Promise/" data-id="cjxa7eovb0009qguwx7lrfdks" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/18/手写一个简单的Promise/" data-id="ck0yn1xe600081guwj5dqoz1n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -277,7 +410,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/13/原型链的难点/" data-id="cjxa7eov30005qguwjrcevkxr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/13/原型链的难点/" data-id="ck0yn1xe100061guwp4i0mjb2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -329,7 +462,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/08/理解执行上下文和作用域/" data-id="cjxa7eova0008qguwusqg47yg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/08/理解执行上下文和作用域/" data-id="ck0yn1xe700091guwviyzc8gv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -377,7 +510,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/08/js创建对象的集中方法/" data-id="cjxa7eouy0001qguwhr3p5k95" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/08/js创建对象的集中方法/" data-id="ck0yn1xdx00031guwnfnesgfz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -427,7 +560,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/instanceof/" data-id="cjxa7eov10003qguwnfjjzn5n" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/instanceof/" data-id="ck0yn1xdh00001guwh04i97dp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -482,118 +615,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/js垃圾回收机制/" data-id="cjxa7eov00002qguw4uwanf82" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-闭包" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/01/02/闭包/" class="article-date">
-  <time datetime="2019-01-02T04:12:02.000Z" itemprop="datePublished">2019-01-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/02/闭包/">JS基础巩固系列：【2】闭包</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="什么是闭包"><a href="#什么是闭包" class="headerlink" title="什么是闭包"></a>什么是闭包</h2><p>函数A内部有一个函数B，函数B可以访问到函数A中的变量，那么函数B就是闭包。我个人的理解是：闭包就是能够读取其他函数内部变量的函数，并不需要return一个函数。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line">    <span class="built_in">window</span>.B = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(a)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">A()</span><br><span class="line">B() <span class="comment">// 1</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="闭包的作用"><a href="#闭包的作用" class="headerlink" title="闭包的作用"></a>闭包的作用</h2><p>根据闭包的概念，我们可以理解到闭包最重要的作用就是可以将函数内部和函外部链接起来，他的作用有两处，一个是可以读取函数内部的变量，另一个是让这些变量的值始终保持在内存中，我们用一段代码来解释这两点：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> n = <span class="number">999</span>;</span><br><span class="line">    nAdd = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        n+=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(n)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> f2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> result = f1();</span><br><span class="line">result(); <span class="comment">//999</span></span><br><span class="line">nAdd();</span><br><span class="line">result(); <span class="comment">//1000</span></span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>首先函数f1执行后将f2赋给了全局变量result，而函数f2在函数f1内部，所以在f2的内部可以访问到f1的变量n。</li>
-<li>因为f2的存在依赖了f1中的变量n，所以使得f1也始终被存储在了内存中，在调用之后，不会被垃圾回收机制回收。（内部函数引用了位于外部函数的变量,当外部函数调用完毕后,这些变量在内存不会被释放,因为闭包需要它们）</li>
-</ol>
-<h2 id="使用闭包的注意点"><a href="#使用闭包的注意点" class="headerlink" title="使用闭包的注意点"></a>使用闭包的注意点</h2><p>由于闭包会使得函数中的变量都被保存在内存中，内存消耗很大，所以不能滥用闭包，否则会造成网页的性能问题，在IE中可能导致内存泄露。解决方法是，在退出函数之前，将不使用的局部变量全部删除。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/闭包/" data-id="cjxa7eovt000bqguwsrgtustb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-this指向" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/12/29/this指向/" class="article-date">
-  <time datetime="2018-12-29T01:11:04.000Z" itemprop="datePublished">2018-12-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/29/this指向/">JS基础巩固系列：【1】this的指向问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="普通的调用场景"><a href="#普通的调用场景" class="headerlink" title="普通的调用场景"></a>普通的调用场景</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.a)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">foo();</span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">    a: <span class="number">2</span>,</span><br><span class="line">    foo: foo</span><br><span class="line">&#125;;</span><br><span class="line">obj.foo();</span><br><span class="line"><span class="keyword">const</span> c = <span class="keyword">new</span> foo();</span><br></pre></td></tr></table></figure>
-<p>我们针对上面几个场景分析：</p>
-<ol>
-<li>对于直接调用 foo 来说，不管 foo 函数被放在了什么地方，this 一定是 window</li>
-<li>对于 obj.foo() 来说，我们只需要记住，谁调用了函数，谁就是 this，所以在这个场景下 foo 函数中的 this 就是 obj 对象</li>
-<li>对于 new 的方式来说，this 被永远绑定在了 c 上面，不会被任何方式改变 this</li>
-</ol>
-<h2 id="特殊情况"><a href="#特殊情况" class="headerlink" title="特殊情况"></a>特殊情况</h2><h4 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a()()())</span><br></pre></td></tr></table></figure>
-<p>要理解上面这种情况，首先我们要明白几个知识点：</p>
-<ol>
-<li>箭头函数其实是没有 this 的，箭头函数中的 this 只取决包裹箭头函数的第一个普通函数的 this，对于上面的例子，包裹箭头函数的第一个普通函数是 a，所以此时的this是window。</li>
-<li>对于箭头函数，使用bind这类函数是无效的</li>
-</ol>
-<h4 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123; </span><br><span class="line">    name: <span class="string">'test'</span> </span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">foo.bind(a)();</span><br></pre></td></tr></table></figure>
-<ul>
-<li>使用bind一类可以改变上下文的API，this 取决于第一个参数，如果第一个参数为空，那么就是 window。</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;&#125;</span><br><span class="line"><span class="keyword">let</span> fn = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">     <span class="built_in">console</span>.log(<span class="keyword">this</span>) </span><br><span class="line">&#125;</span><br><span class="line">fn.bind().bind(a)()</span><br></pre></td></tr></table></figure>
-<ul>
-<li>对于上面的例子，如果对一个函数进行多次bind，这个时候的this会是谁呢？</li>
-</ul>
-<p>上述代码可以转换成另外一种方式<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fn.bind().bind(a) 等于</span></span><br><span class="line"><span class="keyword">let</span> fn2 = <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fn.apply()</span><br><span class="line">    &#125;.apply(a)</span><br><span class="line">&#125;</span><br><span class="line">fn2()</span><br></pre></td></tr></table></figure></p>
-<p>从这个函数来看，我们可以发现，不管给函数 bind 了多少次，fn中的this，永远是由第一次 bind 决定的，所以这里this的结果永远是 window。</p>
-<p>以上就是 this 的规则了，但是可能会发生多个规则同时出现的情况，这时候不同的规则之间会根据优先级最高的来决定 this 最终指向哪里。</p>
-<p>首先，new 的方式优先级最高，接下来是 bind 这些函数，然后是 obj.foo() 这种调用方式，最后是 foo 这种调用方式，同时，箭头函数的 this 一旦被绑定，就不会再被任何方式所改变。</p>
-<p>上面的逻辑，汇总到流程图中的规则如下，仅适用单个规则的情况：<br><img src="https://fansgithub.github.io/css/images/this.png" alt="Image text"></p>
-<h4 id="顺便提一下，js可以改变上下文的API包含-apply、call以及bind，三者的关系如下"><a href="#顺便提一下，js可以改变上下文的API包含-apply、call以及bind，三者的关系如下" class="headerlink" title="顺便提一下，js可以改变上下文的API包含 apply、call以及bind，三者的关系如下"></a>顺便提一下，js可以改变上下文的API包含 apply、call以及bind，三者的关系如下</h4><ul>
-<li>apply 、 call 、bind 三者都是用来改变函数的this对象的指向的；</li>
-<li>apply 、 call 、bind 三者第一个参数都是this要指向的对象，也就是想指定的上下文。非严格模式下，如果第一个参数传入null或者undefined，this会指向window；</li>
-<li>apply 、 call 、bind 三者都可以利用后续参数传参，apply第二个参数是一个参数数组，call接受一个参数列表；</li>
-<li>bind 是返回对应函数，便于稍后调用；apply 、call 则是立即调用。</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/29/this指向/" data-id="cjxa7eov40006qguwct4ng1ik" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/js垃圾回收机制/" data-id="ck0yn1xea000c1guwkf29hyht" class="article-share-link">Share</a>
       
       
     </footer>
@@ -626,7 +648,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -639,6 +661,14 @@
       <ul>
         
           <li>
+            <a href="/2019/09/25/js判断数据类型的方法/">js判断数据类型的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/31/js创建对象方式/">js创建对象方式与集成方式</a>
+          </li>
+        
+          <li>
             <a href="/2019/06/24/http缓存图解/">http缓存图解</a>
           </li>
         
@@ -648,14 +678,6 @@
         
           <li>
             <a href="/2019/01/18/手写一个简单的Promise/">JS基础巩固系列：【8】手写一个简单的Promise</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/13/原型链的难点/">JS基础巩固系列：【7】原型链的难点</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/08/理解执行上下文和作用域/">JS基础巩固系列：【6】理解执行上下文和作用域</a>
           </li>
         
       </ul>
