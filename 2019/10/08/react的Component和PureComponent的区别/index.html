@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>react的Component和PureComponent的区别 | 一点一滴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="结论PureComponent是在Component的基础上对shouldComponentUpdate这部分进行了优化，通过对新旧state和新旧props各进行一次浅比较，通过判断是否发生变化来确认是否需要进行更新，以此来避免大量的重复渲染，优化性能。我们通过一段代码来看下两者的行为12345678910111213141516171819202122232425262728293031323">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react的Component和PureComponent的区别">
+<meta property="og:url" content="http://yoursite.com/2019/10/08/react的Component和PureComponent的区别/index.html">
+<meta property="og:site_name" content="一点一滴">
+<meta property="og:description" content="结论PureComponent是在Component的基础上对shouldComponentUpdate这部分进行了优化，通过对新旧state和新旧props各进行一次浅比较，通过判断是否发生变化来确认是否需要进行更新，以此来避免大量的重复渲染，优化性能。我们通过一段代码来看下两者的行为12345678910111213141516171819202122232425262728293031323">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-10-08T03:20:30.525Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react的Component和PureComponent的区别">
+<meta name="twitter:description" content="结论PureComponent是在Component的基础上对shouldComponentUpdate这部分进行了优化，通过对新旧state和新旧props各进行一次浅比较，通过判断是否发生变化来确认是否需要进行更新，以此来避免大量的重复渲染，优化性能。我们通过一段代码来看下两者的行为12345678910111213141516171819202122232425262728293031323">
+  
+    <link rel="alternate" href="/atom.xml" title="一点一滴" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">一点一滴</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">将来的你一定会感谢现在拼命的自己</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-react的Component和PureComponent的区别" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/08/react的Component和PureComponent的区别/" class="article-date">
+  <time datetime="2019-10-08T02:47:47.000Z" itemprop="datePublished">2019-10-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      react的Component和PureComponent的区别
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>PureComponent是在Component的基础上对shouldComponentUpdate这部分进行了优化，通过对新旧state和新旧props各进行一次浅比较，通过判断是否发生变化来确认是否需要进行更新，以此来避免大量的重复渲染，优化性能。我们通过一段代码来看下两者的行为<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ChildComponent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">        render() &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'ChildComponent render'</span>)</span><br><span class="line">            <span class="keyword">return</span>(</span><br><span class="line">                &lt;div&gt;</span><br><span class="line">                &#123;<span class="keyword">this</span>.props.numbers&#125;</span><br><span class="line">                &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">            )</span></span><br><span class="line"><span class="regexp">        &#125;</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">    class ChildComponent extends React.PureComponent &#123;</span></span><br><span class="line"><span class="regexp">        render() &#123;</span></span><br><span class="line"><span class="regexp">            console.log('ChildComponent render')</span></span><br><span class="line"><span class="regexp">            return(</span></span><br><span class="line"><span class="regexp">                &lt;div&gt;</span></span><br><span class="line"><span class="regexp">                &#123;this.props.numbers&#125;</span></span><br><span class="line"><span class="regexp">                &lt;/</span>div&gt;</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MainComponent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">        <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">            <span class="keyword">super</span>(props);</span><br><span class="line">            <span class="keyword">this</span>.handleClick = <span class="keyword">this</span>.handleClick.bind(<span class="keyword">this</span>);</span><br><span class="line">            <span class="keyword">this</span>.state = &#123;</span><br><span class="line">                numbers: [<span class="number">0</span>]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        handleClick() &#123;</span><br><span class="line">            <span class="keyword">const</span> arr = <span class="keyword">this</span>.state.numbers;</span><br><span class="line">            arr.push(<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">                numbers: arr</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        render() &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'MainComponent render'</span>)</span><br><span class="line">            <span class="keyword">return</span>(</span><br><span class="line">                &lt;div&gt;</span><br><span class="line">                    &lt;button onClick=&#123;<span class="keyword">this</span>.handleClick&#125; &gt;click me&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;ChildComponent numbers=&#123;this.state.numbers&#125;/</span>&gt;</span><br><span class="line">                &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">            )</span></span><br><span class="line"><span class="regexp">        </span></span><br><span class="line"><span class="regexp">        &#125;</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default MainComponent</span></span><br></pre></td></tr></table></figure></p>
+<p>在点击按钮时，MainComponent每次都会执行render函数，但ChildComponent只有继承PureComponent时，才会执行render，在react的源码中，PureComponent在判断是否需要更新组件时，进行了以下的比较：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">shouldUpdate = !shallowEqual(oldProps, props) || !shallowEqual(oldState, state);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//shallowEqual函数实现</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">is</span>(<span class="params">x: any, y: any</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="comment">//这边是为了处理 0 === -0 和 NaN !== NaN的情况</span></span><br><span class="line">    (x === y &amp;&amp; (x !== <span class="number">0</span> || <span class="number">1</span> / x === <span class="number">1</span> / y)) || (x !== x &amp;&amp; y !== y)</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> hasOwnProperty = <span class="built_in">Object</span>.prototype.hasOwnProperty;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shallowEqual</span>(<span class="params">objA: mixed, objB: mixed</span>): <span class="title">boolean</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (is(objA, objB)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (</span><br><span class="line">    <span class="keyword">typeof</span> objA !== <span class="string">'object'</span> ||</span><br><span class="line">    objA === <span class="literal">null</span> ||</span><br><span class="line">    <span class="keyword">typeof</span> objB !== <span class="string">'object'</span> ||</span><br><span class="line">    objB === <span class="literal">null</span></span><br><span class="line">  ) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> keysA = <span class="built_in">Object</span>.keys(objA);</span><br><span class="line">  <span class="keyword">const</span> keysB = <span class="built_in">Object</span>.keys(objB);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (keysA.length !== keysB.length) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Test for A's keys different from B.</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keysA.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (</span><br><span class="line">      !hasOwnProperty.call(objB, keysA[i]) ||</span><br><span class="line">      !is(objA[keysA[i]], objB[keysA[i]])</span><br><span class="line">    ) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意：这个代码示例中， handleClick 方法中给state对象push元素时，用的是引用的方式，所以，当使用PureComponent时，因为我们操作的时同一个数据对象，所以就算修改了state，组件也不会进行更新，但是因为Component不进行这个处理，所以页面的数据可以正常发生变化，这也是使用PureComponent必须留意的地方。我们必须通过浅拷贝或者immutable的一些库，来避免这种错误的发生。<br>用浅拷贝的修改方式如下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> handleClick() &#123;</span><br><span class="line">    <span class="keyword">const</span> arr = <span class="keyword">this</span>.state.numbers;</span><br><span class="line">    <span class="keyword">let</span> newArr = [...arr]</span><br><span class="line">    newArr.push(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">        numbers: newArr</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>用immutableJS的修改方式如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用immutablejs的List来初始化state</span></span><br><span class="line"><span class="keyword">this</span>.state = &#123;</span><br><span class="line">    numbers: List([<span class="number">0</span>])</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//使用List的push函数重新生成arr</span></span><br><span class="line">handleClick() &#123; </span><br><span class="line">    <span class="keyword">const</span> arr = <span class="keyword">this</span>.state.numbers;</span><br><span class="line">    <span class="keyword">let</span> newArr = arr.push(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">        numbers: newArr</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/10/08/react的Component和PureComponent的区别/" data-id="ck1ha1tjj000238uwekv6h6bs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/09/25/js判断数据类型的方法/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">js判断数据类型的方法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/10/08/react的Component和PureComponent的区别/">react的Component和PureComponent的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/25/js判断数据类型的方法/">js判断数据类型的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/31/js创建对象与继承/">js创建对象方式与集成方式</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/24/http缓存图解/">http缓存图解</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/12/重学webpack/">重学webpack</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 一点一滴<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false}});</script></body>
+</html>

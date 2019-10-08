@@ -66,6 +66,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-react的Component和PureComponent的区别" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/08/react的Component和PureComponent的区别/" class="article-date">
+  <time datetime="2019-10-08T02:47:47.000Z" itemprop="datePublished">2019-10-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/08/react的Component和PureComponent的区别/">react的Component和PureComponent的区别</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>PureComponent是在Component的基础上对shouldComponentUpdate这部分进行了优化，通过对新旧state和新旧props各进行一次浅比较，通过判断是否发生变化来确认是否需要进行更新，以此来避免大量的重复渲染，优化性能。我们通过一段代码来看下两者的行为<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ChildComponent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">        render() &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'ChildComponent render'</span>)</span><br><span class="line">            <span class="keyword">return</span>(</span><br><span class="line">                &lt;div&gt;</span><br><span class="line">                &#123;<span class="keyword">this</span>.props.numbers&#125;</span><br><span class="line">                &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">            )</span></span><br><span class="line"><span class="regexp">        &#125;</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">    class ChildComponent extends React.PureComponent &#123;</span></span><br><span class="line"><span class="regexp">        render() &#123;</span></span><br><span class="line"><span class="regexp">            console.log('ChildComponent render')</span></span><br><span class="line"><span class="regexp">            return(</span></span><br><span class="line"><span class="regexp">                &lt;div&gt;</span></span><br><span class="line"><span class="regexp">                &#123;this.props.numbers&#125;</span></span><br><span class="line"><span class="regexp">                &lt;/</span>div&gt;</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MainComponent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">        <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">            <span class="keyword">super</span>(props);</span><br><span class="line">            <span class="keyword">this</span>.handleClick = <span class="keyword">this</span>.handleClick.bind(<span class="keyword">this</span>);</span><br><span class="line">            <span class="keyword">this</span>.state = &#123;</span><br><span class="line">                numbers: [<span class="number">0</span>]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        handleClick() &#123;</span><br><span class="line">            <span class="keyword">const</span> arr = <span class="keyword">this</span>.state.numbers;</span><br><span class="line">            arr.push(<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">                numbers: arr</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        render() &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'MainComponent render'</span>)</span><br><span class="line">            <span class="keyword">return</span>(</span><br><span class="line">                &lt;div&gt;</span><br><span class="line">                    &lt;button onClick=&#123;<span class="keyword">this</span>.handleClick&#125; &gt;click me&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;ChildComponent numbers=&#123;this.state.numbers&#125;/</span>&gt;</span><br><span class="line">                &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">            )</span></span><br><span class="line"><span class="regexp">        </span></span><br><span class="line"><span class="regexp">        &#125;</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default MainComponent</span></span><br></pre></td></tr></table></figure></p>
+<p>在点击按钮时，MainComponent每次都会执行render函数，但ChildComponent只有继承PureComponent时，才会执行render，在react的源码中，PureComponent在判断是否需要更新组件时，进行了以下的比较：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">shouldUpdate = !shallowEqual(oldProps, props) || !shallowEqual(oldState, state);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//shallowEqual函数实现</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">is</span>(<span class="params">x: any, y: any</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="comment">//这边是为了处理 0 === -0 和 NaN !== NaN的情况</span></span><br><span class="line">    (x === y &amp;&amp; (x !== <span class="number">0</span> || <span class="number">1</span> / x === <span class="number">1</span> / y)) || (x !== x &amp;&amp; y !== y)</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> hasOwnProperty = <span class="built_in">Object</span>.prototype.hasOwnProperty;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shallowEqual</span>(<span class="params">objA: mixed, objB: mixed</span>): <span class="title">boolean</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (is(objA, objB)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (</span><br><span class="line">    <span class="keyword">typeof</span> objA !== <span class="string">'object'</span> ||</span><br><span class="line">    objA === <span class="literal">null</span> ||</span><br><span class="line">    <span class="keyword">typeof</span> objB !== <span class="string">'object'</span> ||</span><br><span class="line">    objB === <span class="literal">null</span></span><br><span class="line">  ) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> keysA = <span class="built_in">Object</span>.keys(objA);</span><br><span class="line">  <span class="keyword">const</span> keysB = <span class="built_in">Object</span>.keys(objB);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (keysA.length !== keysB.length) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Test for A's keys different from B.</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keysA.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (</span><br><span class="line">      !hasOwnProperty.call(objB, keysA[i]) ||</span><br><span class="line">      !is(objA[keysA[i]], objB[keysA[i]])</span><br><span class="line">    ) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意：这个代码示例中， handleClick 方法中给state对象push元素时，用的是引用的方式，所以，当使用PureComponent时，因为我们操作的时同一个数据对象，所以就算修改了state，组件也不会进行更新，但是因为Component不进行这个处理，所以页面的数据可以正常发生变化，这也是使用PureComponent必须留意的地方。我们必须通过浅拷贝或者immutable的一些库，来避免这种错误的发生。<br>用浅拷贝的修改方式如下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> handleClick() &#123;</span><br><span class="line">    <span class="keyword">const</span> arr = <span class="keyword">this</span>.state.numbers;</span><br><span class="line">    <span class="keyword">let</span> newArr = [...arr]</span><br><span class="line">    newArr.push(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">        numbers: newArr</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>用immutableJS的修改方式如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用immutablejs的List来初始化state</span></span><br><span class="line"><span class="keyword">this</span>.state = &#123;</span><br><span class="line">    numbers: List([<span class="number">0</span>])</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//使用List的push函数重新生成arr</span></span><br><span class="line">handleClick() &#123; </span><br><span class="line">    <span class="keyword">const</span> arr = <span class="keyword">this</span>.state.numbers;</span><br><span class="line">    <span class="keyword">let</span> newArr = arr.push(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">        numbers: newArr</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/10/08/react的Component和PureComponent的区别/" data-id="ck1ha1tjj000238uwekv6h6bs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js判断数据类型的方法" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/09/25/js判断数据类型的方法/" class="article-date">
@@ -112,7 +153,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/09/25/js判断数据类型的方法/" data-id="ck0ynbpot0004eguwlylwlalw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/09/25/js判断数据类型的方法/" data-id="ck1ha1tjm000438uwn02v7d4x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -189,7 +230,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/07/31/js创建对象与继承/" data-id="ck0ynbpoq0002eguwq61s3j7s" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/07/31/js创建对象与继承/" data-id="ck1ha1tjn000538uw2lfuxun7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -226,7 +267,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/24/http缓存图解/" data-id="ck0ynbpok0000eguwmsw9tri3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/06/24/http缓存图解/" data-id="ck1ha1tj4000038uwr8nbjbjq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -303,7 +344,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/12/重学webpack/" data-id="ck0ynbpp4000beguwghoouzjn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/06/12/重学webpack/" data-id="ck1ha1tjp000738uwk4ij3d4n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -360,7 +401,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/18/手写一个简单的Promise/" data-id="ck0ynbpp5000ceguwjq6eyi7a" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/18/手写一个简单的Promise/" data-id="ck1ha1tk9000e38uwxiid7tto" class="article-share-link">Share</a>
       
       
     </footer>
@@ -410,7 +451,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/13/原型链的难点/" data-id="ck0ynbpov0006eguwmvj73fsb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/13/原型链的难点/" data-id="ck1ha1tjt000838uwg3xbfup5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -462,7 +503,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/08/理解执行上下文和作用域/" data-id="ck0ynbpp3000aeguwylzil5si" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/08/理解执行上下文和作用域/" data-id="ck1ha1tjw000b38uww5vkq40d" class="article-share-link">Share</a>
       
       
     </footer>
@@ -510,7 +551,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/08/js创建对象的几种方法/" data-id="ck0ynbpos0003eguwobjui3fm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/08/js创建对象的几种方法/" data-id="ck1ha1tjk000338uwmw6evlqt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -560,62 +601,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/instanceof/" data-id="ck0ynbpop0001eguw7v7odep6" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js垃圾回收机制" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/01/02/js垃圾回收机制/" class="article-date">
-  <time datetime="2019-01-02T07:43:02.000Z" itemprop="datePublished">2019-01-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/02/js垃圾回收机制/">JS基础巩固系列：【3】js垃圾回收机制</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="垃圾回收机制的必要性"><a href="#垃圾回收机制的必要性" class="headerlink" title="垃圾回收机制的必要性"></a>垃圾回收机制的必要性</h2><p>我们引用《JavaScript权威指南（第四版）》的一段话来解释一下：由于字符串、对象和数组没有固定大小，所有当他们的大小已知时，才能对他们进行动态的存储分配。JavaScript程序每次创建字符串、数组或对象时，解释器都必须分配内存来存储那个实体。只要像这样动态地分配了内存，最终都要释放这些内存以便他们能够被再用，否则，JavaScript的解释器将会消耗完系统中所有可用的内存，造成系统崩溃。</p>
-<h2 id="js是如何实现垃圾回收的"><a href="#js是如何实现垃圾回收的" class="headerlink" title="js是如何实现垃圾回收的"></a>js是如何实现垃圾回收的</h2><p>js有自己的一套垃圾回收机制（Garbage Collection）。JavaScript的解析器可以监测到何时程序不再使用一个对象了，当确认这个对象是无用的时候，就可以把他的内存释放掉了，上例子：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="string">'before'</span>;</span><br><span class="line"><span class="keyword">var</span> b = <span class="string">'override a'</span>;</span><br><span class="line">a = b;</span><br></pre></td></tr></table></figure></p>
-<p>这段代码运行后，’before’已经失去了引用，系统检测到后，就会释放’before’所占的存储空间。</p>
-<h2 id="垃圾回收原理"><a href="#垃圾回收原理" class="headerlink" title="垃圾回收原理"></a>垃圾回收原理</h2><p>现在各大浏览器通常使用的垃圾回收有两种方式：标记清除和引用计数</p>
-<ol>
-<li>标记清除<br>这是 JavaScript 中最常见的垃圾回收方式。为什么说这是种最常见的方法，因为从 2012 年起，所有现代浏览器都使用了标记-清除的垃圾回收方法，除了低版本 IE…它们采用的是引用计数方法。<br>那什么叫标记清除呢？JavaScript 中有个全局对象，浏览器中是 window。定期的，垃圾回收期将从这个全局对象开始，找所有从这个全局对象开始引用的对象，再找这些对象引用的对象…对这些活着的对象进行标记，这是标记阶段。清除阶段就是清除那些没有被标记的对象。<br>工作流程：</li>
-</ol>
-<ul>
-<li>垃圾收集器会在运行的时候会给存储在内存中的 所有变量都加上标记 。</li>
-<li>去掉环境中的变量以及被环境中的变量引用的变量的标记。</li>
-<li>那些还存在标记的变量被视为准备删除的变量。</li>
-<li>最后垃圾收集器会执行最后一步内存清除的工作，销毁那些带标记的值并回收它们所占用的内存空间。<br>标记－清除法的一个问题就是不那么有效率，因为在标记－清除阶段，整个程序将会等待，所以如果程序出现卡顿的情况，那有可能是收集垃圾的过程。<br>标记-清除还有一个问题，就是在清除之后，内存空间是不连续的，即出现了内存碎片。如果后面需要一个比较大的连续的内存空间时，那将不能满足要求。而标记-整理方法可以有效地解决这个问题。标记阶段没有什么不同，只是标记结束后，标记-整理方法会将活着的对象向内存的一边移动，最后清理掉边界的内存。不过可以想象，这种做法的效率没有标记-清除高。</li>
-</ul>
-<ol start="2">
-<li>引用计数<br>在内存管理环境中，对象 A 如果有访问对象 B 的权限，叫做对象 A 引用对象 B。引用计数的策略是将“对象是否不再需要”简化成“对象有没有其他对象引用到它”，如果没有对象引用这个对象，那么这个对象将会被回收。上例子：<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1 = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;; <span class="comment">// 一个对象（称之为 A）被创建，赋值给 obj1，A 的引用个数为 1 </span></span><br><span class="line"><span class="keyword">let</span> obj2 = obj1; <span class="comment">// A 的引用个数变为 2</span></span><br><span class="line">obj1 = <span class="number">0</span>; <span class="comment">// A 的引用个数变为 1</span></span><br><span class="line">obj2 = <span class="number">0</span>; <span class="comment">// A 的引用个数变为 0，此时对象 A 就可以被垃圾回收了</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>但是引用计数有个最大的问题： 循环引用。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> obj1 = &#123;&#125;;</span><br><span class="line">    <span class="keyword">let</span> obj2 = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    obj1.a = obj2; <span class="comment">// obj1 引用 obj2</span></span><br><span class="line">    obj2.a = obj1; <span class="comment">// obj2 引用 obj1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>当函数 func 执行结束后，返回值为 undefined，所以整个函数以及内部的变量都应该被回收，但根据引用计数方法，obj1 和 obj2 的引用次数都不为 0，所以他们不会被回收。<br>这种情况我们可以通过，给将变量赋值为null，来释放其引用。这个方法被称为“解除引用”</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/js垃圾回收机制/" data-id="ck0ynbpow0007eguw3t4dxl47" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/instanceof/" data-id="ck1ha1tji000138uwoi2pxg7m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -648,7 +634,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -659,6 +645,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/10/08/react的Component和PureComponent的区别/">react的Component和PureComponent的区别</a>
+          </li>
         
           <li>
             <a href="/2019/09/25/js判断数据类型的方法/">js判断数据类型的方法</a>
@@ -674,10 +664,6 @@
         
           <li>
             <a href="/2019/06/12/重学webpack/">重学webpack</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/18/手写一个简单的Promise/">JS基础巩固系列：【8】手写一个简单的Promise</a>
           </li>
         
       </ul>
