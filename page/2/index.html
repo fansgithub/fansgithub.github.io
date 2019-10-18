@@ -66,6 +66,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-instanceof" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/02/instanceof/" class="article-date">
+  <time datetime="2019-01-02T07:43:13.000Z" itemprop="datePublished">2019-01-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/02/instanceof/">JS基础巩固系列：【4】instanceof的比较原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="js-instanceof-的实现类比如下："><a href="#js-instanceof-的实现类比如下：" class="headerlink" title="js instanceof 的实现类比如下："></a>js instanceof 的实现类比如下：</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">instance_of</span>(<span class="params">L, R</span>) </span>&#123;<span class="comment">//L 表示左表达式，R 表示右表达式</span></span><br><span class="line">    <span class="keyword">var</span> O = R.prototype;<span class="comment">// 取 R 的显示原型</span></span><br><span class="line">    L = L.__proto__;<span class="comment">// 取 L 的隐式原型</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123; </span><br><span class="line">        <span class="keyword">if</span> (L === <span class="literal">null</span>) </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">        <span class="keyword">if</span> (O === L)<span class="comment">// 这里重点：当 O 严格等于 L 时，返回 true </span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">        L = L.__proto__; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="根据instanceof的比较逻辑，修改代码，使得cat-instanceof-Animal结果为true"><a href="#根据instanceof的比较逻辑，修改代码，使得cat-instanceof-Animal结果为true" class="headerlink" title="根据instanceof的比较逻辑，修改代码，使得cat instanceof Animal结果为true"></a>根据instanceof的比较逻辑，修改代码，使得cat instanceof Animal结果为true</h2><p>原代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cat</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> cat = <span class="keyword">new</span> Cat();</span><br><span class="line"><span class="built_in">console</span>.log(cat <span class="keyword">instanceof</span> Animal);   <span class="comment">//true</span></span><br></pre></td></tr></table></figure></p>
+<p>修改方案1:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cat</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.__proto__ = <span class="keyword">new</span> Animal();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> cat = <span class="keyword">new</span> Cat();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">instance_of</span>(<span class="params">L, R</span>) </span>&#123;<span class="comment">//L 表示左表达式，R 表示右表达式</span></span><br><span class="line">    <span class="keyword">var</span> O = R.prototype;<span class="comment">// 取 R 的显示原型</span></span><br><span class="line">    L = L.__proto__;<span class="comment">// 取 L 的隐式原型</span></span><br><span class="line">    <span class="keyword">var</span> i = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123; </span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">`第<span class="subst">$&#123;i&#125;</span>次比较`</span>, L, O)</span><br><span class="line">        <span class="keyword">if</span> (L === <span class="literal">null</span>) </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">        <span class="keyword">if</span> (O === L)<span class="comment">// 这里重点：当 O 严格等于 L 时，返回 true </span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">        L = L.__proto__; </span><br><span class="line">        i++;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(cat <span class="keyword">instanceof</span> Animal);   <span class="comment">//true</span></span><br><span class="line"><span class="comment">//instance_of(cat, Animal)</span></span><br></pre></td></tr></table></figure></p>
+<p>这里执行了2次比较：</p>
+<ul>
+<li>cat.__proto__和Animal.prototype，Animal的实例和Animal.prototype比较，不等于；</li>
+<li>Animal的实例的__proto__ 和 Animal.prototype，相等；</li>
+</ul>
+<p>修改方案2:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cat</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Cat.prototype = <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">var</span> cat = <span class="keyword">new</span> Cat();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">instance_of</span>(<span class="params">L, R</span>) </span>&#123;<span class="comment">//L 表示左表达式，R 表示右表达式</span></span><br><span class="line">    <span class="keyword">var</span> O = R.prototype;<span class="comment">// 取 R 的显示原型</span></span><br><span class="line">    L = L.__proto__;<span class="comment">// 取 L 的隐式原型</span></span><br><span class="line">    <span class="keyword">var</span> i = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123; </span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">`第<span class="subst">$&#123;i&#125;</span>次比较`</span>, L, O)</span><br><span class="line">        <span class="keyword">if</span> (L === <span class="literal">null</span>) </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">        <span class="keyword">if</span> (O === L)<span class="comment">// 这里重点：当 O 严格等于 L 时，返回 true </span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">        L = L.__proto__; </span><br><span class="line">        i++;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(cat <span class="keyword">instanceof</span> Animal);   <span class="comment">//true</span></span><br><span class="line"><span class="comment">//instance_of(cat, Animal)</span></span><br></pre></td></tr></table></figure></p>
+<p>这里执行了2次比较：</p>
+<ul>
+<li>cat.__proto__和Animal.prototype，即Animal的实例和Animal.prototype比较，不等于；</li>
+<li>Animal的实例的__proto__和Animal.prototype比较，相等；</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/02/instanceof/" data-id="ck1vgfa4n0001wouwajc4rq5w" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js垃圾回收机制" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/01/02/js垃圾回收机制/" class="article-date">
@@ -111,7 +161,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/js垃圾回收机制/" data-id="ck1ha1tjo000638uw5k8190eu" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/js垃圾回收机制/" data-id="ck1vgfa4s0005wouwk17kqoup" class="article-share-link">Share</a>
       
       
     </footer>
@@ -154,7 +204,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/闭包/" data-id="ck1ha1tjv000a38uwudmdjz5z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/闭包/" data-id="ck1vgfa5d000ewouwwfw1zeen" class="article-share-link">Share</a>
       
       
     </footer>
@@ -222,7 +272,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/29/this指向/" data-id="ck1ha1tju000938uwweomn8y6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/29/this指向/" data-id="ck1vgfa50000awouweoivnqou" class="article-share-link">Share</a>
       
       
     </footer>
@@ -283,7 +333,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/14/nginx常用功能/" data-id="ck1ha1tjx000d38uwaux4ga6r" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/14/nginx常用功能/" data-id="ck1vgfa4v0008wouwxggdwbuq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -324,7 +374,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/性能优化/" data-id="ck1ha1tjx000c38uwhnhpaucr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/05/性能优化/" data-id="ck1vgfa54000dwouw846m0c4b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -370,6 +420,10 @@
       <ul>
         
           <li>
+            <a href="/2019/10/18/webpack实现SSR/">webpack实现SSR</a>
+          </li>
+        
+          <li>
             <a href="/2019/10/08/react的Component和PureComponent的区别/">react的Component和PureComponent的区别</a>
           </li>
         
@@ -383,10 +437,6 @@
         
           <li>
             <a href="/2019/06/24/http缓存图解/">http缓存图解</a>
-          </li>
-        
-          <li>
-            <a href="/2019/06/12/重学webpack/">重学webpack</a>
           </li>
         
       </ul>
