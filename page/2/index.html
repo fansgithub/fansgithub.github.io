@@ -66,6 +66,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-js创建对象的几种方法" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/08/js创建对象的几种方法/" class="article-date">
+  <time datetime="2019-01-08T07:40:32.000Z" itemprop="datePublished">2019-01-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/08/js创建对象的几种方法/">JS基础巩固系列：【5】js创建对象的几种方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="使用Object函数创建"><a href="#使用Object函数创建" class="headerlink" title="使用Object函数创建"></a>使用Object函数创建</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">person.name = <span class="string">'zhangsan'</span>;</span><br><span class="line">person.age = <span class="number">14</span>;</span><br></pre></td></tr></table></figure>
+<p>缺点：大量的重复代码</p>
+<h2 id="使用对象字面量创建"><a href="#使用对象字面量创建" class="headerlink" title="使用对象字面量创建"></a>使用对象字面量创建</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    name: <span class="string">'zhangsan'</span>,</span><br><span class="line">    age: <span class="number">14</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>缺点：大量的重复代码</p>
+<h2 id="使用工厂模式创建"><a href="#使用工厂模式创建" class="headerlink" title="使用工厂模式创建"></a>使用工厂模式创建</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">name, age</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">    o.name = name;</span><br><span class="line">    o.age = age;</span><br><span class="line">    <span class="keyword">return</span> o;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person = createPerson(<span class="string">'zhangsan'</span>, <span class="number">14</span>)</span><br></pre></td></tr></table></figure>
+<p>优点：解决了代码量大的问题<br>缺点：生成的对象缺乏识别性</p>
+<h2 id="使用自定义构造函数模式创建"><a href="#使用自定义构造函数模式创建" class="headerlink" title="使用自定义构造函数模式创建"></a>使用自定义构造函数模式创建</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">    <span class="keyword">this</span>.sayName = fucntion()&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> Person(<span class="string">'zhangsan'</span>, <span class="number">14</span>)</span><br></pre></td></tr></table></figure>
+<p>优点：对象有了识别性<br>缺点：sayName这个方法每次都会生成一次，浪费内存</p>
+<h2 id="使用原型模式创建"><a href="#使用原型模式创建" class="headerlink" title="使用原型模式创建"></a>使用原型模式创建</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Person.proptotype = &#123;</span><br><span class="line">    name: <span class="string">'zhangsan'</span>,</span><br><span class="line">    age: <span class="number">14</span>,</span><br><span class="line">    sayName: fucntion()&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> Person()</span><br></pre></td></tr></table></figure>
+<p>优点：将共有的属性和方法抽到了原型上，避免了重复声明<br>缺点：生成的对象都是一致的，没有了自定义的属性</p>
+<h2 id="使用原型模式和构造函数创建"><a href="#使用原型模式和构造函数创建" class="headerlink" title="使用原型模式和构造函数创建"></a>使用原型模式和构造函数创建</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line">Person.proptotype.sayName = fucntion()&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">'zhangsan'</span>, <span class="number">14</span>);</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">'lisi'</span>, <span class="number">14</span>);</span><br></pre></td></tr></table></figure>
+<p>优点：将共有的属性和方法抽到了原型上，自定义的属性通过构造函数重新声明，这是目前使用最广泛、认同度最高的方法</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/08/js创建对象的几种方法/" data-id="ck1vhmpdg0004csuwikbnacga" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-instanceof" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/01/02/instanceof/" class="article-date">
@@ -106,7 +154,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/instanceof/" data-id="ck1vgfa4n0001wouwajc4rq5w" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/instanceof/" data-id="ck1vhmpd90001csuwhiia9que" class="article-share-link">Share</a>
       
       
     </footer>
@@ -161,7 +209,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/js垃圾回收机制/" data-id="ck1vgfa4s0005wouwk17kqoup" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/js垃圾回收机制/" data-id="ck1vhmpdh0005csuw3puzv5bu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -204,7 +252,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/02/闭包/" data-id="ck1vgfa5d000ewouwwfw1zeen" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/02/闭包/" data-id="ck1vhmpdr000gcsuwu397ks5h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -272,7 +320,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/29/this指向/" data-id="ck1vgfa50000awouweoivnqou" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/29/this指向/" data-id="ck1vhmpdk0008csuwgvposlfh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -333,7 +381,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/14/nginx常用功能/" data-id="ck1vgfa4v0008wouwxggdwbuq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/14/nginx常用功能/" data-id="ck1vhmpdi0006csuwmy9c79xf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -374,7 +422,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/性能优化/" data-id="ck1vgfa54000dwouw846m0c4b" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/05/性能优化/" data-id="ck1vhmpdn000ccsuwx40wvqs0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -420,6 +468,10 @@
       <ul>
         
           <li>
+            <a href="/2019/10/18/使用webpack打包一个自己的基础库/">使用webpack打包一个自己的基础库</a>
+          </li>
+        
+          <li>
             <a href="/2019/10/18/webpack实现SSR/">webpack实现SSR</a>
           </li>
         
@@ -433,10 +485,6 @@
         
           <li>
             <a href="/2019/07/31/js创建对象与继承/">js创建对象方式与集成方式</a>
-          </li>
-        
-          <li>
-            <a href="/2019/06/24/http缓存图解/">http缓存图解</a>
           </li>
         
       </ul>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>使用webpack打包一个自己的基础库 | 一点一滴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这篇文章我以一个大数相加的简单实现，带大家了解一下怎么使用webpack打包自己的js库，这个包有几个基本的要求 我们需要满足各个模块导入的规范 在生产环境下，我们需要让使用者使用一个压缩后的版本，但是在开发环境下，使用没有被压缩过的版本 使用者可以直接用 import largeNumber from &amp;#39;large-number&amp;#39; 这个代码进行引用 需要发布到 npm 上   首">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用webpack打包一个自己的基础库">
+<meta property="og:url" content="http://yoursite.com/2019/10/18/使用webpack打包一个自己的基础库/index.html">
+<meta property="og:site_name" content="一点一滴">
+<meta property="og:description" content="这篇文章我以一个大数相加的简单实现，带大家了解一下怎么使用webpack打包自己的js库，这个包有几个基本的要求 我们需要满足各个模块导入的规范 在生产环境下，我们需要让使用者使用一个压缩后的版本，但是在开发环境下，使用没有被压缩过的版本 使用者可以直接用 import largeNumber from &amp;#39;large-number&amp;#39; 这个代码进行引用 需要发布到 npm 上   首">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-10-18T02:01:49.996Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用webpack打包一个自己的基础库">
+<meta name="twitter:description" content="这篇文章我以一个大数相加的简单实现，带大家了解一下怎么使用webpack打包自己的js库，这个包有几个基本的要求 我们需要满足各个模块导入的规范 在生产环境下，我们需要让使用者使用一个压缩后的版本，但是在开发环境下，使用没有被压缩过的版本 使用者可以直接用 import largeNumber from &amp;#39;large-number&amp;#39; 这个代码进行引用 需要发布到 npm 上   首">
+  
+    <link rel="alternate" href="/atom.xml" title="一点一滴" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">一点一滴</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">将来的你一定会感谢现在拼命的自己</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-使用webpack打包一个自己的基础库" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/18/使用webpack打包一个自己的基础库/" class="article-date">
+  <time datetime="2019-10-18T01:47:32.000Z" itemprop="datePublished">2019-10-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用webpack打包一个自己的基础库
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="这篇文章我以一个大数相加的简单实现，带大家了解一下怎么使用webpack打包自己的js库，这个包有几个基本的要求"><a href="#这篇文章我以一个大数相加的简单实现，带大家了解一下怎么使用webpack打包自己的js库，这个包有几个基本的要求" class="headerlink" title="这篇文章我以一个大数相加的简单实现，带大家了解一下怎么使用webpack打包自己的js库，这个包有几个基本的要求"></a>这篇文章我以一个大数相加的简单实现，带大家了解一下怎么使用webpack打包自己的js库，这个包有几个基本的要求</h2><ul>
+<li>我们需要满足各个模块导入的规范</li>
+<li>在生产环境下，我们需要让使用者使用一个压缩后的版本，但是在开发环境下，使用没有被压缩过的版本</li>
+<li>使用者可以直接用 <code>import largeNumber from &#39;large-number&#39;</code> 这个代码进行引用</li>
+<li>需要发布到 <code>npm</code> 上</li>
+</ul>
+<ol>
+<li>首先我们新建一个 <code>large-number</code> 的文件夹</li>
+<li>执行 <code>npm init -y</code>，生成package.json文件</li>
+<li><p>新建 <code>src</code> 文件夹，在文件件夹下新建 <code>index.js</code> 文件，代码如下：</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a, b</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> i = a.length <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">let</span> j = b.length <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> carry = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> ret = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">while</span>(i &gt;= <span class="number">0</span> || j&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">let</span> x = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">let</span> y = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">let</span> sum;</span><br><span class="line">        <span class="keyword">if</span>(i &gt;= <span class="number">0</span>)&#123;</span><br><span class="line">            x = a[i] - <span class="string">'0'</span></span><br><span class="line">            i--</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(j &gt;= <span class="number">0</span>)&#123;</span><br><span class="line">            y = b[j] - <span class="string">'0'</span></span><br><span class="line">            j--</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        sum = x + y + carry;</span><br><span class="line">        <span class="keyword">if</span>(sum &gt;=<span class="number">10</span>)&#123;</span><br><span class="line">            carry = <span class="number">1</span>;</span><br><span class="line">            sum -= <span class="number">10</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            carry = <span class="number">0</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ret = sum + ret</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(carry)&#123;</span><br><span class="line">        ret = carry + ret</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根目录新建 <code>webpack.config.js</code> 文件，配置如下</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> TerserPlugin = <span class="built_in">require</span>(<span class="string">'terser-webpack-plugin'</span>)</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    mode: <span class="string">"none"</span>,</span><br><span class="line">    entry: &#123;</span><br><span class="line">        <span class="string">"large-number"</span>: <span class="string">"./src/index.js"</span>,</span><br><span class="line">        <span class="string">"large-number.min"</span>: <span class="string">"./src/index.js"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        filename: <span class="string">"[name].js"</span>,</span><br><span class="line">        library: <span class="string">"largeNumber"</span>,</span><br><span class="line">        libraryTarget: <span class="string">"umd"</span>,</span><br><span class="line">        libraryExport: <span class="string">"default"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    optimization: &#123;</span><br><span class="line">        minimize: <span class="literal">true</span>,</span><br><span class="line">        minimizer: [</span><br><span class="line">            <span class="keyword">new</span> TerserPlugin(&#123;</span><br><span class="line">                include: <span class="regexp">/\.min\.js$/</span></span><br><span class="line">            &#125;)</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 根据这个包的需求，我们需要将代码打包为js和min.js两份代码，为了自己控制是否需要打包，所以引入了<code>terser-webpack-plugin</code> 这个插件，并且配置文件输出 <code>libraryTarget</code>为”umd”、<code>libraryExport</code> 为 “default”</p>
+</li>
+<li><p>为了区分开发环境与生产魂晶，我们需要在根目录新建index.js文件，代码如下</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(process.env.NODE_ENV === <span class="string">'production'</span>)&#123;</span><br><span class="line">    <span class="built_in">module</span>.exports = <span class="built_in">require</span>(<span class="string">'./dist/large-number.min.js'</span>)</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="built_in">module</span>.exports = <span class="built_in">require</span>(<span class="string">'./dist/large-number.js'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>我们需要配置package.json的<code>main</code>属性为 ‘index.js’,</p>
+</li>
+<li>最后我们执行 npm publish 命令即可将包发布到npm仓库，该操作需要登录自己的npm账号，这部分内容不做阐述，如果包的名称重复的话，修改即可</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/10/18/使用webpack打包一个自己的基础库/" data-id="ck1vhmpdl000acsuwokg11awo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/10/18/webpack实现SSR/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">webpack实现SSR</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/10/18/使用webpack打包一个自己的基础库/">使用webpack打包一个自己的基础库</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/18/webpack实现SSR/">webpack实现SSR</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/react的Component和PureComponent的区别/">react的Component和PureComponent的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/25/js判断数据类型的方法/">js判断数据类型的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/31/js创建对象与继承/">js创建对象方式与集成方式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 一点一滴<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false}});</script></body>
+</html>
